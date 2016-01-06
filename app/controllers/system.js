@@ -5,18 +5,9 @@ var express = require('express'),
 
 
 module.exports = function (app) {
-  app.use('/', router);
+  app.use('/system', router);
 };
 
 router.get('/', function (req, res, next) {
-  //show homepage
-  res.render('login');
-});
-
-router.get('/login', function (req, res, next) {
-  
-});
-
-router.get('/logout', function (req, res, next) {
-  
+  // show system page
 });

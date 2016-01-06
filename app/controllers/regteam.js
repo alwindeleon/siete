@@ -5,18 +5,15 @@ var express = require('express'),
 
 
 module.exports = function (app) {
-  app.use('/', router);
+  app.use('/regteam', router);
 };
 
 router.get('/', function (req, res, next) {
-  //show homepage
-  res.render('login');
+  //show regteam page
 });
 
-router.get('/login', function (req, res, next) {
+router.get('/enlister', function (req, res, next) {
   
 });
 
-router.get('/logout', function (req, res, next) {
-  
-});
+

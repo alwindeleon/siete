@@ -7,6 +7,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var compress = require('compression');
 var methodOverride = require('method-override');
+var expressSession = require('express-session')
 
 module.exports = function(app, config) {
   var env = process.env.NODE_ENV || 'development';
@@ -22,14 +23,18 @@ module.exports = function(app, config) {
   app.use(bodyParser.urlencoded({
     extended: true
   }));
-  app.use(cookieParser());
+  app.use(cookieParser({secret:'55555SIETE55555'}));
   app.use(compress());
   app.use(express.static(config.root + '/public'));
   app.use(methodOverride());
 
   var controllers = glob.sync(config.root + '/app/controllers/*.js');
   controllers.forEach(function (controller) {
-    require(controller)(app);
+    if(controller != "/home/alwin/Desktop/projects/siete/app/controllers/socket.js"){
+      console.log(controller);
+      require(controller)(app);
+    }
+        
   });
 
   app.use(function (req, res, next) {

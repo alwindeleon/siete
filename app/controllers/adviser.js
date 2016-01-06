@@ -5,18 +5,9 @@ var express = require('express'),
 
 
 module.exports = function (app) {
-  app.use('/', router);
+  app.use('/adviser', router);
 };
 
-router.get('/', function (req, res, next) {
-  //show homepage
-  res.render('login');
-});
-
 router.get('/login', function (req, res, next) {
-  
-});
-
-router.get('/logout', function (req, res, next) {
-  
+  // show adviser page
 });
