@@ -10,13 +10,33 @@ module.exports = function (app) {
 
 router.get('/', function (req, res, next) {
   //show homepage
-  res.render('login');
+  res.render('index');
 });
 
 router.get('/login', function (req, res, next) {
-  
+  res.render('login');
 });
 
-router.get('/logout', function (req, res, next) {
-  
+router.post('/login', function (req, res, next) {
+    if(!req.body.username || !req.body.password)
+    return res.render('login',
+      {error: 'Please enter your email and password'
+    });
+  User.findOne({
+    username: req.body.username,
+    password: req.body.password
+  }, function(error, user){
+    console.log(user);
+    if(error) return next(error);
+    if(!user) return res.render('login',{error: 'Incorrect email and password '});
+    console.log("users role is"+user.role);
+    req.session.role =  user.role;
+    res.redirect('/'+user.role);
+  })
+
+});
+
+router.post('/logout', function (req, res, next) {
+  req.session.destroy();
+  res.redirect('/');
 });

@@ -10,4 +10,5 @@ module.exports = function (app) {
 
 router.get('/', function (req, res, next) {
   // show regteam admin page
+  res.send("welcome regteamadmin");
 });

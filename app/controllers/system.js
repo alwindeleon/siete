@@ -10,4 +10,5 @@ module.exports = function (app) {
 
 router.get('/', function (req, res, next) {
   // show system page
+  res.send("welcome system");
 });

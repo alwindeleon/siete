@@ -23,10 +23,15 @@ module.exports = function(app, config) {
   app.use(bodyParser.urlencoded({
     extended: true
   }));
-  app.use(cookieParser({secret:'55555SIETE55555'}));
+
   app.use(compress());
   app.use(express.static(config.root + '/public'));
   app.use(methodOverride());
+
+  
+  //for session
+  app.use(cookieParser('55555SIETE55555'));
+  app.use(expressSession({secret:'55555'}));
 
   var controllers = glob.sync(config.root + '/app/controllers/*.js');
   controllers.forEach(function (controller) {

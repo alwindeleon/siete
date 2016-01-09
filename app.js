@@ -114,6 +114,9 @@ Class('MainQueues', {
         })
         
     },
+    adviseGetQueue: function(queueName){
+      return this.advise[queueName];
+    },
     resetQueues: function(){
       this.advise = {};
       this.enlist = {};
@@ -129,7 +132,7 @@ db.on('error', function () {
 });
 
 db.once('open', function() {
-  console.log("connected");
+  console.log("connected to " +  config.db);
 });
 
 var models = glob.sync(config.root + '/app/models/*.js');
