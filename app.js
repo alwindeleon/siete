@@ -148,3 +148,14 @@ require('./config/express')(app, config);
 app.listen(config.port, function () {
   console.log('Express server listening on port ' + config.port);
 });
+
+//for testing  -louvette
+queues.adviseCreateQ("2012");
+queues.adviseEnqueue("oh wonder", "2012");
+queues.adviseEnqueue("fickle friends", "2012");
+
+
+queues.adviseCreateQ("2011");
+queues.adviseEnqueue("john mayer", "2011");
+queues.adviseEnqueue("john may", "2011");
+queues.adviseEnqueue("john mayest", "2011");

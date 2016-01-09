@@ -1,0 +1,60 @@
+
+html{
+	font-size: 12px;
+}
+
+
+body{
+	background-color: #2f3131; 
+	margin:0;
+}
+
+#queue-carousel{
+	max-width: 97%;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+
+
+.listItem{
+	color: #333333 !important;
+	background-color: #fafafa !important;
+}
+.card-panel{
+	background-color: #fafafa !important;
+	padding: 5px !important;
+}
+
+.batch1{ background-color: #F0C0A8 !important; color: #333333 !important; }
+.batch2{ background-color: #F0D8A8 !important; color: #333333 !important; }
+.batch3{ background-color: #A8C090 !important; color: #333333 !important; }
+.batch4{ background-color: #789090 !important; color: #f4f4f4 !important; }
+.batch5{ background-color: #787878 !important; color: #f4f4f4 !important; }
+/*.headPadding{ padding: 3px; }*/
+/* label focus color */
+.input-field input[type=text]:focus + label {
+	color: #4b6f2c;
+	font-size: 12px;
+}
+.input-field input[type=password]:focus + label {
+	color: #4b6f2c;
+	font-size: 12px;
+}
+/* label focus color */
+.input-field input[type=text]:focus {
+	border-bottom: 1px solid #4b6f2c;
+	-webkit-box-shadow: 0 1px 0 0 #4b6f2c;
+	-moz-box-shadow: 0 1px 0 0 #4b6f2c;
+	box-shadow: 0 1px 0 0 #4b6f2c;
+}
+.input-field input[type=password]:focus {
+	border-bottom: 1px solid #4b6f2c;
+	-webkit-box-shadow: 0 1px 0 0 #4b6f2c;
+	-moz-box-shadow: 0 1px 0 0 #4b6f2c;
+	box-shadow: 0 1px 0 0 #4b6f2c;
+}
+
+nav {
+	height: 60px !important;
+}

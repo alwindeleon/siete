@@ -10,7 +10,9 @@ module.exports = function (app) {
 
 router.get('/', function (req, res, next) {
   //show homepage
-  res.render('index');
+  var qAdvise = queues.advise;
+  //console.log("log:  " + qAdvise);
+  res.render('index', {queuesAdvise: qAdvise});
 });
 
 router.get('/login', function (req, res, next) {
