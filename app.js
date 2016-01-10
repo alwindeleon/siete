@@ -2,32 +2,46 @@ var express = require('express'),
   config = require('./config/config'),
   glob = require('glob'),
   mongoose = require('mongoose'),
+  http = require('http'),
   scraperjs = require('scraperjs'),
+  socketIo = require('socket.io'),
+  socketMVC = require('socket.mvc'),
   Class = require('classes').Class;
+
+
 
 Class('MainQueues', {
     
     construct: function() {
       //dictionary of queues for advising
         this.advise = {};
+      // advise control number
+        this.adviseControlNumber ={};
 
       // dictionary of queues for enlistment
         this.enlist = {};
         
       //availability of classes
         this.enlistAvailable = {};
+
+
     },
     
     adviseEnqueue: function(info, queueName) {
+        var curCN = this.adviseControlNumber[queueName];
+        info = String(curCN) + '. ' + info;
         this.advise[queueName].push(info);
+        this.adviseControlNumber[queueName]++;
+        return curCN;
     },
-    adviseDequeue: function(info, queueName, numOfRequest) {
+    adviseDequeue: function(queueName, numOfRequest) {
       if(!numOfRequest) numOfRequest = 5;
-        var advisees = new Array();
-        for(var i = 0; i < numOfRequest; ii++){
-          advisees.push(this.advise[queueName].shift());
-        }
-        return advisees;
+      if(this.advise[queueName].length <= 5) return 0;
+      var advisees = new Array();
+      for(var i = 0; i < numOfRequest; ii++){
+        advisees.push(this.advise[queueName].shift());
+      }
+      return this.advise[queueName];
     },
 
     enlistEnqueue: function(info, subjects) {
@@ -35,20 +49,20 @@ Class('MainQueues', {
         this.enlist[subjects[i]].push(info);
       }
     },
-    enlistDequeue: function(info, queueName) {
+    enlistDequeue: function(queueName) {
         return this.enlist[queueName].shift();
     },
 
     adviseCreateQ: function(queueName) {
       this.advise[queueName] = [];
+      this.adviseControlNumber[queueName] = 1;
     },
 
     enlistInitQ: function() {
       var self = this;
       var CS_CLASSES=[];
       var AVAILABILTY=[];
-      scraperjs.StaticScraper.create('https://google.com')
-      // scraperjs.StaticScraper.create('https://crs.upd.edu.ph/schedule/120152/cs')
+      scraperjs.StaticScraper.create('https://crs.upd.edu.ph/schedule/120152/cs')
         .scrape(function($) {
             
             $('#tbl_schedule tbody tr td:nth-child(2)').each( function(){
@@ -119,6 +133,7 @@ Class('MainQueues', {
     },
     resetQueues: function(){
       this.advise = {};
+      this.adviseControlNumber = {};
       this.enlist = {};
       this.enlistAvailable = {};
     }
@@ -145,11 +160,32 @@ queues = new MainQueues();
 
 require('./config/express')(app, config);
 
-app.listen(config.port, function () {
+var server = http.Server(app);
+var io = socketIo(server);
+
+server.listen(config.port, function () {
   console.log('Express server listening on port ' + config.port);
 });
 
-//for testing  -louvette
+
+// io.sockets.on('connection', function (socket) {
+//   console.log("LONG POLLING FAK");
+//  socketMVC.init(socketIo, socket, {
+//     debug: true,
+//     filePath: ['./app/controllers/index-socket.js']
+//   });
+// });
+
+io.sockets.on('connection', function(socket){
+  socket.emit('connection');
+  console.log('someone connected');
+  socketMVC.init(socketIo, socket, {
+    debug: true,
+    filePath: ['./app/controllers/index-socket.js']
+  });
+});
+
+// for testing  -louvette
 queues.adviseCreateQ("2012");
 queues.adviseEnqueue("oh wonder", "2012");
 queues.adviseEnqueue("fickle friends", "2012");

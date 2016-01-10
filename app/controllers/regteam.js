@@ -10,7 +10,7 @@ module.exports = function (app) {
 
 router.get('/', function (req, res, next) {
   //show regteam page
-  res.send("welcome regteam;")
+  res.render('regteam');
 });
 
 

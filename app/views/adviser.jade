@@ -1,0 +1,27 @@
+extends layout
+block js
+  script(src="js/jquery.js")
+  script(type='text/javascript', src='/js/materialize.js')
+  script(src='/socket.io/socket.io.js')
+  script(src="js/adviser-app.js")
+block content
+  .row
+    .col.s12.blue.lighten-2.center-align
+      h1#batch.center-align batch
+  .row
+      .col.s4.blue.lighten-5
+        .card-panel.batch1.headPadding
+          strong
+            h5.center-align Current
+        #queue.card-panel.collection
+        //
+          each item in queuesEnlist[key]
+            a.collection-item.batch1(href='#!') #{item}
+      .col.s4.offset-s2
+        .row
+          h3 remaining advisees:
+          h4#numAdvisees 0
+        .row
+          button.btn.waves-light.waves-effect#next NEXT
+
+      

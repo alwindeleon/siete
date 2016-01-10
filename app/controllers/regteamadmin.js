@@ -10,5 +10,10 @@ module.exports = function (app) {
 
 router.get('/', function (req, res, next) {
   // show regteam admin page
-  res.send("welcome regteamadmin");
+  res.render('regteamadmin');
+});
+
+router.post('/createqueue', function(req,res, next){
+  queues.adviseCreateQ(req.body.queueName);
+  res.render('regteamadmin',{message: 'queue created'});
 });

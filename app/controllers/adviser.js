@@ -10,7 +10,7 @@ module.exports = function (app) {
 
 router.get('/', function (req, res, next) {
   // show adviser page
-  res.send("welcome adviser");
+  res.render('adviser');
 });
 
 router.get('/dequeue',function(req, res, next){

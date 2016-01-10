@@ -35,7 +35,7 @@ module.exports = function(app, config) {
 
   var controllers = glob.sync(config.root + '/app/controllers/*.js');
   controllers.forEach(function (controller) {
-    if(controller != "/home/alwin/Desktop/projects/siete/app/controllers/socket.js"){
+    if(controller.split('/').pop().split('-').pop() != 'socket.js'){
       console.log(controller);
       require(controller)(app);
     }

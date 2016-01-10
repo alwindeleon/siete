@@ -21,6 +21,8 @@ html
     |       
     script(type='text/javascript', src='/js/slick.js')
     |       
+    script(type='text/javascript', src='/js/index-app.js')
+    script(src='/socket.io/socket.io.js')
     script.
       $(document).ready(function(){
       $('.slk').slick({
@@ -121,7 +123,7 @@ html
                   a.collection-item.listItem(href='#!') 9 - Lastname, A B.
                   | 
                   a.collection-item.listItem(href='#!') 10 - Lastname, A B.
-                .card-panel.collection
+                .card-panel.collection(id='#{key}')
                   each item in queuesAdvise[key]
                     a.collection-item.batch1(href='#!') #{item}
             each val,key in queuesEnlist
@@ -151,7 +153,7 @@ html
                   a.collection-item.listItem(href='#!') 9 - Lastname, A B.
                   | 
                   a.collection-item.listItem(href='#!') 10 - Lastname, A B.
-                .card-panel.collection
+                .card-panel.collection(id='#{key}')
                   each item in queuesEnlist[key]
                     a.collection-item.batch1(href='#!') #{item}
 

@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  form(action='/regteamadmin/createqueue',method='POST')
+    .row.valign-wrapper
+        .col.s4.offset-s4.valign.hoverable.z-depth-1.blue.lighten-5
+          h1.center-align Create Queue
+          .row
+            .input-field.col.s12
+              input#queueName.validate(type='text',name='queueName')
+              |     
+              label(for='queueName') Name of Queue
+          .row
+            .col.s4.offset-s4
+              button.waves-effect.waves-light.btn(type='submit') Create Queue
+          span Note: all queues created here will be in the advising queues
+          if locals.message
+            p #{message}
+          else
+            p
