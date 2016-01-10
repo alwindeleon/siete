@@ -96,69 +96,21 @@ html
       .row
         .col.s12.l12
           #queue-carousel.slk
-            each val,key in queuesAdvise
-              .col.l2.s12.center-align
-                .card-panel.batch1.headPadding
-                  strong
-                    h5 #{key}
-                | 
-                //-.card-panel.collection
-                  a.collection-item.batch1(href='#!')
-                    span.mdl-badge(data-badge='1') Lastname, A B.
-                  | 
-                  a.collection-item.batch1(href='#!') 2 - Lastname, A B.
-                  | 
-                  a.collection-item.batch1(href='#!') 3 - Lastname, A B.
-                  | 
-                  a.collection-item.batch1(href='#!') 4 - Lastname, A B.
-                  | 
-                  a.collection-item.batch1(href='#!') 5 - Lastname, A B.
-                  | 
-                  a.collection-item.listItem(href='#!') 6 - Lastname, A B.
-                  | 
-                  a.collection-item.listItem(href='#!') 7 - Lastname, A B.
-                  | 
-                  a.collection-item.listItem(href='#!') 8 - Lastname, A B.
-                  | 
-                  a.collection-item.listItem(href='#!') 9 - Lastname, A B.
-                  | 
-                  a.collection-item.listItem(href='#!') 10 - Lastname, A B.
-                .card-panel.collection(id='#{key}')
-                  each item in queuesAdvise[key]
-                    a.collection-item.batch1(href='#!') #{item}
-            each val,key in queuesEnlist
-              .col.l2.s12.center-align
-                .card-panel.batch1.headPadding
-                  strong
-                    h5 #{key}
-                | 
-                //-.card-panel.collection
-                  a.collection-item.batch1(href='#!')
-                    span.mdl-badge(data-badge='1') Lastname, A B.
-                  | 
-                  a.collection-item.batch1(href='#!') 2 - Lastname, A B.
-                  | 
-                  a.collection-item.batch1(href='#!') 3 - Lastname, A B.
-                  | 
-                  a.collection-item.batch1(href='#!') 4 - Lastname, A B.
-                  | 
-                  a.collection-item.batch1(href='#!') 5 - Lastname, A B.
-                  | 
-                  a.collection-item.listItem(href='#!') 6 - Lastname, A B.
-                  | 
-                  a.collection-item.listItem(href='#!') 7 - Lastname, A B.
-                  | 
-                  a.collection-item.listItem(href='#!') 8 - Lastname, A B.
-                  | 
-                  a.collection-item.listItem(href='#!') 9 - Lastname, A B.
-                  | 
-                  a.collection-item.listItem(href='#!') 10 - Lastname, A B.
-                .card-panel.collection(id='#{key}')
-                  each item in queuesEnlist[key]
-                    a.collection-item.batch1(href='#!') #{item}
-
-                     
-                    
-            
-            
-           
+            if Object.keys(queuesAdvise).length > 0
+              each val,key in queuesAdvise
+                .col.l2.s12.center-align
+                  .card-panel.batch1.headPadding
+                    strong
+                      h5 #{key}
+                  .card-panel.collection(id='#{key}')
+                    each item in queuesAdvise[key]
+                      a.collection-item.batch1(href='#!') #{item}
+            if Object.keys(queuesEnlist).length > 0
+              each val,key in queuesEnlist
+                .col.l2.s12.center-align
+                  .card-panel.batch1.headPadding
+                    strong
+                      h5 #{key}
+                  .card-panel.collection(id='#{key}')
+                    each item in queuesEnlist[key]
+                      a.collection-item.batch1(href='#!') #{item}

@@ -20,17 +20,19 @@ $(document).ready(function(){
           'text':'QUEUE IS EMPTY HOORAY',
       }).appendTo('#queue');
       $('#numAdvisees').text('0');
-      return;
+      
+    }else {
+      $('#numAdvisees').text(String(updatedBatch.length));
+      $('#queue').empty();
+      for(var i = 0; i < 5; i++){
+        $('<div/>', {
+            'id':'myDiv',
+            'class':'collection-item batch1',
+            'text':updatedBatch[i],
+        }).appendTo('#queue');
+      }
     }
-    $('#numAdvisees').text(String(updatedBatch.length));
-    $('#queue').empty();
-    for(var i = 0; i < 5; i++){
-      $('<div/>', {
-          'id':'myDiv',
-          'class':'collection-item batch1',
-          'text':updatedBatch[i],
-      }).appendTo('#queue');
-    }
+   
   });
 
   $('#next').click(function(){
