@@ -1,27 +1,86 @@
-extends layout
-block js
-  script(src="js/jquery.js")
-  script(type='text/javascript', src='/js/materialize.js')
-  script(src='/socket.io/socket.io.js')
-  script(src="js/adviser-app.js")
-block content
-  .row
-    .col.s12.blue.lighten-2.center-align
-      h1#batch.center-align batch
-  .row
-      .col.s4.blue.lighten-5
-        .card-panel.batch1.headPadding
+doctype html(lang='en')
+head
+    meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')     
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+         
+    title Adviser
+    // Materialize CSS local files and cdn for jquery
+    link(type='text/css', rel='stylesheet', href='css/materialize.css', media='screen,projection')
+    link(type='text/css', rel='stylesheet', href='css/adviser-style.css', media='screen,projection')
+        
+    script(type='text/javascript', src='https://code.jquery.com/jquery-2.1.1.min.js')
+         
+    script(type='text/javascript', src='js/materialize.js')
+         
+    script(type='text/javascript', src='/socket.io/socket.io.js')
+    
+    
+    script(src="js/adviser-app.js")
+          
+   
+
+body
+  header
+    nav
+      .nav-wrapper.white
+        a.tooltipped.brand-logo.center.black-text(href='/adviser' data-position='right' data-tooltip='Click to change queue to advise') Adviser Dashboard
+                    
+        ul.right.hide-on-med-and-down
+          li
+            a.white-text(href='/') Home
+          |             
+          li
+            a.white-text(href='#!') Switch to Enlister
+          |             
+          li
+            a.white-text(href='/logout') Logout
+        |           
+        ul#slide-out.side-nav.fixed.cyan
+          li
+            a.white-text(href='/') Home
+          |             
+          li
+            a.white-text(href='#') Switch to Enlister
+          |             
+          li
+            a.white-text(href='/logout') Logout
+        |           
+        a.button-collapse(href='#', data-activates='slide-out')
+          i.mdi-navigation-menu.cyan
+       
+  main
+    a.waves-effect.waves-light.btn.modal-trigger(href="#modal1") Modal
+
+    #modal1.modal
+      .modal-content
+        p Which batch are you handling?
+        select(id="batchSelect")
+          each item in queuesList
+            option(value="#{item}") #{item}        
+
+      .modal-footer
+        a#modalbtn.modal-action.modal-close.waves-effect.waves-green.btn(href='#!') Submit
+
+
+    .row
+      .col.l6.s12.center-align
+        .card-panel
           strong
-            h5.center-align Current
-        #queue.card-panel.collection
-        //
-          each item in queuesEnlist[key]
-            a.collection-item.batch1(href='#!') #{item}
-      .col.s4.offset-s2
-        .row
-          h3 remaining advisees:
-          h4#numAdvisees 0
-        .row
-          button.btn.waves-light.waves-effect#next NEXT
+            h5#batch batch
+                          
+        ul#queue.card-panel.collection
+          li.collection-item.batch1 Queue is empty                   
+          
+      .col.l6.s12.center-align.fixed
+        .card-panel.white
+          p Queue length: 
+          p#numAdvisees
+          a#next.waves-effect.waves-light.btn-large Call next 5
+  // Scripts
+  script.
+    $('.button-collapse').sideNav({
+    //add options
+    }
+    );
 
       

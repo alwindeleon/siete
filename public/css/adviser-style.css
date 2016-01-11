@@ -1,0 +1,20 @@
+header, main, footer {
+	padding-left: 240px;
+}
+
+@media only screen and (max-width : 992px) {
+	header, main, footer {
+	padding-left: 0;
+	}
+}
+body {background-color: #2f3131;}
+
+.card-panel{
+	background-color: #fafafa !important;
+	padding: 5px !important;
+}
+
+/*.batch1{ background-color: #F0C0A8 !important; color: #333333 !important; }*/
+.batch1:nth-child(-n+5){ background-color: #ef5350 !important; color: #ffffff !important; }
+.batch1:nth-child(n+6){  color: #333333 !important; }
+.headPadding1 { background-color: #ef6c00 !important; color: #ffffff !important; }
