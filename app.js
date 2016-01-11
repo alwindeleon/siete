@@ -36,9 +36,12 @@ Class('MainQueues', {
     },
     adviseDequeue: function(queueName, numOfRequest) {
       if(!numOfRequest) numOfRequest = 5;
-      if(this.advise[queueName].length <= 5) return 0;
+      if(this.advise[queueName].length <= 5) {
+        this.advise[queueName] = {};
+        return 0;
+      }
       var advisees = new Array();
-      for(var i = 0; i < numOfRequest; ii++){
+      for(var i = 0; i < numOfRequest; i++){
         advisees.push(this.advise[queueName].shift());
       }
       return this.advise[queueName];
@@ -195,3 +198,20 @@ queues.adviseCreateQ("2011");
 queues.adviseEnqueue("john mayer", "2011");
 queues.adviseEnqueue("john may", "2011");
 queues.adviseEnqueue("john mayest", "2011");
+queues.adviseEnqueue("apple", "2011");
+queues.adviseEnqueue("orange", "2011");
+queues.adviseEnqueue("beef", "2011");
+queues.adviseEnqueue("apple", "2011");
+queues.adviseEnqueue("orange", "2011");
+queues.adviseEnqueue("beef", "2011");
+queues.adviseEnqueue("apple", "2011");
+queues.adviseEnqueue("orange", "2011");
+queues.adviseEnqueue("beef", "2011");
+queues.adviseEnqueue("apple", "2011");
+queues.adviseEnqueue("orange", "2011");
+queues.adviseEnqueue("beef", "2011");
+queues.adviseEnqueue("orange", "2011");
+queues.adviseEnqueue("beef", "2011");
+queues.adviseEnqueue("apple", "2011");
+queues.adviseEnqueue("orange", "2011");
+queues.adviseEnqueue("beef", "2011");
