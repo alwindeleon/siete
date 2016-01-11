@@ -10,7 +10,7 @@ module.exports = function (app) {
 
 router.get('/', function (req, res, next) {
   // show adviser page
-  res.render('adviser');
+  res.render('adviser', {queuesList: Object.keys(queues.advise) });
 });
 
 router.get('/dequeue',function(req, res, next){
