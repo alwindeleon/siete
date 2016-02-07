@@ -10,7 +10,7 @@ module.exports = function (app) {
 
 router.get('/', function (req, res, next) {
   // show enlister page
-  res.send("welcome enlister");
+  res.render('enlister');
 });
 
 router.get('/dequeue',function(req, res, next){

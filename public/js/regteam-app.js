@@ -3,7 +3,7 @@ $(document).ready(function(){
   var adviseBatch = $('#batchName');
   var adviseName = $('#adviseName');
 
-  var enlistSections = $('#sections');
+  var enlistSubjects = $('#subjects');
   var enlistName = $('#enlistName');
   var cn = $('#CN');
 
@@ -24,9 +24,9 @@ $(document).ready(function(){
   });
 
   $('button#enlist').click(function(){
-      socket.emit('enqueueEnlister', enlistName.val(), enlistSections.val());
-      adviseName.val('');
-      adviseBatch.val(''); 
-      modal.fadeIn(500);
+      socket.emit('enqueueEnlister', enlistName.val(), enlistSubjects.val());
+      enlistName.val('');
+      enlistSubjects.val(''); 
+      alert('enlisted!');
   });
 });

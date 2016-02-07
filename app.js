@@ -19,10 +19,13 @@ Class('MainQueues', {
         this.adviseControlNumber ={};
 
       // dictionary of queues for enlistment
-        this.enlist = {};
+        this.enlistees = [];
         
       //availability of classes
-        this.enlistAvailable = {};
+        this.enlisters = {};
+
+      //cs subjects
+      this.CS_subjects = [ 11, 12, 21, 30, 32, 130, 131, 133, 135, 140, 145, 150, 153, 180, 192, 194, 196, 197, 199, 210, 220, 231, 250, 253, 282, 290, 294, 295, 296, 297, 298, 300, 400];
 
 
     },
@@ -36,7 +39,10 @@ Class('MainQueues', {
     },
     adviseDequeue: function(queueName, numOfRequest) {
       if(!numOfRequest) numOfRequest = 5;
-      if(this.advise[queueName].length <= 5) return 0;
+      if(this.advise[queueName].length <= 5){
+        this.advise[queueName] = [];
+        return 0;
+      }
       var advisees = new Array();
       for(var i = 0; i < numOfRequest; ii++){
         advisees.push(this.advise[queueName].shift());
@@ -44,13 +50,55 @@ Class('MainQueues', {
       return this.advise[queueName];
     },
 
-    enlistEnqueue: function(info, subjects) {
-      for(var i in subjects){
-        this.enlist[subjects[i]].push(info);
-      }
+    enlisteeEnqueue: function(info, subjects) {
+     var element = [info,subjects.split(',')];
+     this.enlistees.push(element);
+
     },
-    enlistDequeue: function(queueName) {
-        return this.enlist[queueName].shift();
+    enlisteeDequeue: function(name, subject) {
+        for( var i = 0; i < this.enlistees.length; i++){
+          if(name == this.enlistees[i][0]){
+            var ind = this.enlistees[i][1].indexOf(subject);
+            if(ind > -1){
+              this.enlistees[i][1].splice(ind,1);
+            }
+            if(this.enlistees[i][1].length == 0){
+              this.enlistees.splice(i,1);
+            }
+            break;
+          }
+        }
+    },
+    enlisterEnqueue: function(name, subject) {
+     for(var key in this.enlisters){
+      var enlistersSubjs = Object.keys(this.enlisters[key])[0].split(',');
+      if( enlistersSubjs.indexOf(subject) > 0 && this.enlisters[key].indexOf(name) < 0){
+        this.enlisters[key].push(name);
+      }
+     }
+
+    },
+    enlisterDequeue: function(name){
+      if(this.enlisters[name].length <=5){
+        var count = this.enlisters[name].length;
+        for(var i = 0; i < count; i++){
+          var subjects = name.split(',');
+          var curEnlistee = this.enlisters[name].shift();
+          for(var j = 0; j < subjects.length; j++){
+            this.enlisteeDequeue(curEnlistee,subjects[j] );
+          }
+        }
+      }
+      else{
+        for(var i = 0; i < 5; i++){
+          var subjects = name.split(',');
+          var curEnlistee = this.enlisters[name].shift();
+          for(var j = 0; j < subjects.length; j++){
+            this.enlisteeDequeue(curEnlistee,subjects[j] );
+          }
+        }
+      }
+      
     },
 
     adviseCreateQ: function(queueName) {
@@ -58,74 +106,24 @@ Class('MainQueues', {
       this.adviseControlNumber[queueName] = 1;
     },
 
-    enlistInitQ: function() {
-      var self = this;
-      var CS_CLASSES=[];
-      var AVAILABILTY=[];
-      scraperjs.StaticScraper.create('https://crs.upd.edu.ph/schedule/120152/cs')
-        .scrape(function($) {
-            
-            $('#tbl_schedule tbody tr td:nth-child(2)').each( function(){
-               CS_CLASSES.push( $(this).text() );       
-            }).get();
-
-            $('#tbl_schedule tbody tr td:nth-child(2)').each( function(){
-               AVAILABILTY.push( $(this).text() );       
-            }).get();
-
-            return {
-              CS_CLASSES: CS_CLASSES,
-              AVAILABILTY: AVAILABILTY
-            }
-        })
-        .then(function(scrapedInfo) {
-          //remove whitespaces in AVAILABILTY
-          scrapedInfo.AVAILABILTY = scrapedInfo.AVAILABILTY.map(function(x){
-              return x.split('/').map(function(z){
-                console.log(z.trim());
-                return z.trim();
-              });
-            });
-            scrapedInfo.CS_CLASSES.forEach(function(csClass,index){
-              self.enlist[csClass] = [];
-              self.enlistAvailable[csClass] = scrapedInfo.AVAILABILTY[index];
-            });
-        })
-
+    createEnlister: function(subjects) {
+      console.log('INNNNNNNNNNNNNNN');
+      this.enlisters[subjects] = [];
+      console.log(subjects);
+      subjectsArr = subjects.split(',');
+      for(var i = 0 ; i < subjectsArr.length; i++){
+        for( var j = 0; j < this.enlistees.length; j++){
+          if(this.enlistees[j][1].indexOf(subjectsArr[i]) > -1 && this.enlisters[subjects].indexOf(this.enlistees[j][0]) < 0){
+            this.enlisters[subjects].push(this.enlistees[j][0]);
+          }
+        }
+      }
+      console.log(this.enlisters[subjects]);
+      return this.enlisters[subjects];
     },
 
     updateEnlistAvailable: function(){
-      var self = this;
-
-      scraperjs.StaticScraper.create('https://crs.upd.edu.ph/schedule/120152/cs')
-        .scrape(function($) {
-            var CS_CLASSES=[];
-            var AVAILABILTY=[];
-            $('#tbl_schedule tbody tr td:nth-child(2)').each( function(){
-               CS_CLASSES.push( $(this).text() );       
-            }).get();
-
-            $('#tbl_schedule tbody tr td:nth-child(2)').each( function(){
-               AVAILABILTY.push( $(this).text() );       
-            }).get();
-
-            return {
-              CS_CLASSES: CS_CLASSES,
-              AVAILABILTY: AVAILABILTY
-            };
-        })
-        .then(function(scrapedInfo) {
-          //remove whitespaces in AVAILABILTY
-          scrapedInfo.AVAILABILTY = scrapedInfo.AVAILABILTY.map(function(x){
-              return x.split('/').map(function(z){
-                console.log(z.trim());
-                return z.trim();
-              });
-            });
-          scrapedInfo.CS_CLASSES.forEach(function(csClass,index){
-            self.enlistAvailable[csClass] = scrapedInfo.AVAILABILTY[index];
-          });
-        })
+      
         
     },
     adviseGetQueue: function(queueName){
@@ -134,8 +132,8 @@ Class('MainQueues', {
     resetQueues: function(){
       this.advise = {};
       this.adviseControlNumber = {};
-      this.enlist = {};
-      this.enlistAvailable = {};
+      this.enlistees = {};
+      this.enlisters = {};
     }
 
 });

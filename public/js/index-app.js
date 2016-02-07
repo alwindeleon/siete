@@ -26,4 +26,8 @@ $(document).ready(function(){
         
     }
   })
+
+  socket.on('deleteEnlistmentQueue',function(){
+    location.reload();
+  })
 });
