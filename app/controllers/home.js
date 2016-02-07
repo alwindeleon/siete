@@ -11,7 +11,13 @@ router.get('/', function (req, res, next) {
   //show homepage
   var qAdvise = queues.advise;
   //console.log("log:  " + qAdvise);
+<<<<<<< HEAD
   res.render('index', {queuesAdvise: qAdvise, queuesEnlist: queues.enlisters});
+=======
+  qEnlist = {"CS": "blue"};
+
+  res.render('index', {queuesAdvise: qAdvise, queuesEnlist: qEnlist});
+>>>>>>> 8144a275b4bff34fcfe63c18715fab0490587f62
 });
 
 router.get('/login', function (req, res, next) {

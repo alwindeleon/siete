@@ -10,7 +10,7 @@ module.exports = function (app) {
 
 router.get('/', function (req, res, next) {
   //show regteam page
-  res.render('regteam');
+  res.render('regteam', {adviseList: Object.keys(queues.advise), enlistList: Object.keys(queues.enlist)});
 });
 
 

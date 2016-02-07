@@ -26,8 +26,15 @@ body{
 	padding: 5px !important;
 }
 
-.batch1{ background-color: #F0C0A8 !important; color: #333333 !important; }
-.batch2{ background-color: #F0D8A8 !important; color: #333333 !important; }
+/*.batch1{ background-color: #F0C0A8 !important; color: #333333 !important; }*/
+.batch1:nth-child(-n+5){ background-color: #ef5350 !important; color: #ffffff !important; }
+.batch1:nth-child(n+6){  color: #333333 !important; }
+.headPadding1 { background-color: #ef6c00 !important; color: #ffffff !important; }
+/*.batch2{ background-color: #F0D8A8 !important; color: #333333 !important; }*/
+.batch2:nth-child(-n+5){ background-color: #ef5350 !important; color: #ffffff !important; }
+.batch2:nth-child(n+6){  color: #333333 !important; }
+.headPadding2 { background-color: #ffc400 !important; color: #000000 !important; };
+
 .batch3{ background-color: #A8C090 !important; color: #333333 !important; }
 .batch4{ background-color: #789090 !important; color: #f4f4f4 !important; }
 .batch5{ background-color: #787878 !important; color: #f4f4f4 !important; }
@@ -58,3 +65,4 @@ body{
 nav {
 	height: 60px !important;
 }
+

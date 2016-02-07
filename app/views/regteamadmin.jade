@@ -1,6 +1,6 @@
-extends layout
+//-extends layout
 
-block content
+//-block content
   form(action='/regteamadmin/createqueue',method='POST')
     .row.valign-wrapper
         .col.s4.offset-s4.valign.hoverable.z-depth-1.blue.lighten-5
@@ -18,3 +18,90 @@ block content
             p #{message}
           else
             p
+
+doctype html(lang='en')
+head
+    meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+    |     
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    |     
+    |     
+    title Reg Team Admin
+    // Materialize CSS local files and cdn for jquery
+    link(type='text/css', rel='stylesheet', href='/css/materialize.css', media='screen,projection')
+
+    link(type='text/css', rel='stylesheet', href='/css/regadmin-style.css', media='screen,projection')
+        
+    script(type='text/javascript', src='https://code.jquery.com/jquery-2.1.1.min.js')
+         
+    script(type='text/javascript', src='/js/materialize.js')
+    script(type='text/javascript', src='/js/regteamadmin-app.js')
+         
+    
+      
+
+body
+  header
+    nav
+      .nav-wrapper.white
+        a.brand-logo.center.black-text(href='#') Reg Team Admin
+                   
+        ul.right.hide-on-med-and-down
+          li
+            a.white-text(href='/') Home
+          li
+            a.white-text(href='/regteam') Enqueue a student              
+          li
+            a.white-text(href='/logout') Logout
+
+        |           
+        ul#slide-out.side-nav.fixed.red
+          li
+            a.white-text(href='/') Home
+          li
+            a.white-text(href='/regteam') Enqueue a student
+          li
+            a.white-text(href='/logout') Logout
+        a.button-collapse(href='#', data-activates='slide-out')
+          i.mdi-navigation-menu.red
+     
+  main
+    .row
+      .col.l6.s12.center-align
+        .card-panel.collection
+          h5 Advising Queue per Year
+          .row
+            .input-field.col.s12
+              input#queueName.validate(type='text',name='queueName')
+                
+              label(for='queueName') Name of Queue
+          .row
+             a#createAdvising.waves-effect.waves-light.btn Create Advising Queue
+          input#message(type='hidden' value="#{message}")
+          p#displayMessage
+          .row
+            p.grey-text Warning: Creating a queue with the same name as an existing one will overwrite the queue.
+
+              
+                              
+                  
+    .row
+      //-.col.l6.s12.center-align
+        .card-panel.collection
+          h5 Advisers
+          |                    
+          a.waves-effect.waves-light.btn(href='#') Add/remove adviser from queue      
+      //-.col.l6.s12.center-align
+        .card-panel.collection
+          h5 Enlsiters
+          |                    
+          a.waves-effect.waves-light.btn(href='#') Add/remove enlister from queue
+    .row
+      .col.l6.s12.center-align
+        .card-panel.collection
+          h5 Restart All Queues
+          |                    
+          a#resetAll.waves-effect.waves-light.btn(href='#') Reset all
+  // Scripts
+  
+    

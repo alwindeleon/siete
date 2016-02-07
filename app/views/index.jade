@@ -99,18 +99,27 @@ html
             if Object.keys(queuesAdvise).length > 0
               each val,key in queuesAdvise
                 .col.l2.s12.center-align
-                  .card-panel.batch1.headPadding
+                  .card-panel.headPadding1
                     strong
                       h5 #{key}
-                  .card-panel.collection(id='#{key}')
-                    each item in queuesAdvise[key]
-                      a.collection-item.batch1(href='#!') #{item}
+                  .card-panel.collection
+                    ul.collection(id='#{key}')
+                      -var i = 1;
+                      each item in queuesAdvise[key]
+                        li.collection-item.batch1 <b class="left">#{item.substring(0,2)}</b> #{item.substring(3)}
+                        -i++;
+                        -if(i > 15) break;
+
             if Object.keys(queuesEnlist).length > 0
               each val,key in queuesEnlist
                 .col.l2.s12.center-align
-                  .card-panel.batch1.headPadding
+                  .card-panel.headPadding2
                     strong
                       h5 #{key}
                   .card-panel.collection(id='#{key}')
-                    each item in queuesEnlist[key]
-                      a.collection-item.batch1(href='#!') #{item}
+                    ul.collection
+                      -var i = 1;
+                      each item in queuesEnlist[key]
+                        li.collection-item.batch2 #{item}
+                        -i++;
+                        -if(i > 15) break;

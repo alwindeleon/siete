@@ -1,5 +1,12 @@
 $(document).ready(function(){
   var socket = io();
+
+  var modalTrigger = $('.modal-trigger');
+  modalTrigger.leanModal();
+  modalTrigger.hide();
+
+  $('select').material_select();
+
   var adviseBatch = $('#batchName');
   var adviseName = $('#adviseName');
 
@@ -18,15 +25,23 @@ $(document).ready(function(){
   });
   $('button#advise').click(function(){
       socket.emit('enqueueAdviser', adviseName.val(), adviseBatch.val());
-      adviseName.val('');
-      adviseBatch.val('');
-      modal.fadeIn(500);
+      document.getElementById("formStation").reset();
+
+      //modal.fadeIn(500);
+      modalTrigger.click();
   });
 
   $('button#enlist').click(function(){
+<<<<<<< HEAD
       socket.emit('enqueueEnlister', enlistName.val(), enlistSubjects.val());
       enlistName.val('');
       enlistSubjects.val(''); 
       alert('enlisted!');
+=======
+      socket.emit('enqueueEnlister', enlistName.val(), enlistSections.val());
+      document.getElementById("formStation").reset(); 
+      //modal.fadeIn(500);
+      modalTrigger.click();
+>>>>>>> 8144a275b4bff34fcfe63c18715fab0490587f62
   });
 });
