@@ -1,16 +1,17 @@
 $(document).ready(function(){
   var socket = io();
-  var enlisterName;
+  var enlisterName, enlisterSubjects;
   socket.on('connection',function(){
-    enlisterName = prompt('which subjects are you going to handle?');
-    $('#enlisterName').text(enlisterName);
-    socket.emit('getEnlisterQueue',enlisterName);
+    enlisterName = prompt('Whats your name? :D');
+    enlisterSubjects = prompt('which subjects are you going to handle?');
+    $('#enlisterName').text(enlisterSubjects);
+    socket.emit('enlisterConnected',enlisterName, enlisterSubjects.split(','));
   });
   socket.on('updateEnlisterQueue',function(updatedBatch){
     console.log("INSIDE");
     console.log(updatedBatch);
     //if queue is empty
-    if(updatedBatch == 0 ) {
+    if(updatedBatch == 0 || updatedBatch.length == 0 ) {
       $('#queue').empty();
       $('<div/>', {
           'id':'myDiv',
@@ -22,7 +23,7 @@ $(document).ready(function(){
     }else {
       $('#numEnlisters').text(String(updatedBatch.length));
       $('#queue').empty();
-      for(var i = 0; i < 5; i++){
+      for(var i = 0; i < updatedBatch.length; i++){
         $('<div/>', {
             'id':'myDiv',
             'class':'collection-item batch1',
@@ -34,7 +35,7 @@ $(document).ready(function(){
   });
 
   $('#next').click(function(){
-    socket.emit('dequeueEnlister',enlisterName,5);
+    socket.emit('dequeueEnlistee',enlisterSubjects);
   });
   $( window ).unload(function() {
     socket.emit('enlistQueueDC',enlisterName);

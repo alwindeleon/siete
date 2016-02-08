@@ -21,32 +21,63 @@ module.exports = function (socket) {
 
 
   //enlisters side
-  socket.on('enqueueEnlister', function(name, subjects) {
+  socket.on('enqueueEnlistee', function(name, subjects) {
+    console.log("inside socket:  enqueueEnlistee")
     queues.enlisteeEnqueue(name,subjects);
-    console.log(queues.enlistees);
-    subjectsArr = subjects.split(',');
-    for(var i = 0; i < subjectsArr.length; i++){
-      queues.enlisterEnqueue(name, subjectsArr[i]);
+    console.log(queues.enlistees)
+    console.log(queues.enlisters)
+    socket.emit('controlNumber',queues.enlistees.length);
+    for(var i =0; i < queues.enlisters.length; i++){
+      for(var j = 0; j < subjects.length; j++ ){
+        console.log()
+        if(queues.enlisters[i][1].indexOf(subjects[j]) > -1 && queues.enlisters[i][2].length == 0){
+          console.log("index at " + i);
+          console.log("dequeue on : " + queues.enlisters[i][0] +  " at " + queues.enlisters[i][1] + " with " + queues.enlisters[i][2])
+          console.log("dequeue at " + queues.enlisters[i][0])
+          var curStudents = queues.enlisteeDequeue(queues.enlisters[i][0],queues.enlisters[i][1]);
+          console.log("received " + curStudents);
+          socket.emit('updateEnlisterQueue',curStudents);
+          return;
+        }
+      }
     }
-     socket.broadcast.emit('updateEnlisterQueue',queues.enlisters[subjects])
   });
 
-  socket.on('dequeueEnlister', function(name, number) {
-    queues.enlisterDequeue(name);
-    socket.emit('updateEnlisterQueue',queues.enlisters[name] );
-    socket.broadcast.emit('queueUpdate',queues.enlisters[name],name);
+  socket.on('dequeueEnlistee', function(nameOfProf) {
+    console.log("inside socket:  enqueueEnlistee");
+    for(var i = 0; i < queues.enlisters.length; i++){
+      if(queues.enlisters[i][0] == nameOfProf){
+        var curStudents = queues.enlisteeDequeue(nameOfProf,queues.enlisters[i][1]);
+        socket.emit('updateEnlisterQueue',curStudents);
+        socket.broadcast.emit('queueUpdate',nameOfProf,curStudents);
+        break;
+      }
+      
+    }
+
   });
 
-  socket.on('getEnlisterQueue',function(name){
-    console.log("IN");
-    queues.createEnlister(name);
-    socket.emit('updateEnlisterQueue',queues.enlisters[name]);
-    socket.emit('createQueueEnlist',queues.enlisters[name], name);
+  socket.on('error',function(err,data){
+    console.log(err);
+  })
+
+  socket.on('enlisterConnected',function(prof, subjects){
+    console.log(subjects);
+    queues.createEnlister(prof,subjects);
+    var curStudents = queues.enlisteeDequeue(prof,subjects);
+    socket.emit('updateEnlisterQueue',curStudents);
+    socket.broadcast.emit('createQueueEnlist',prof,curStudents);
+    socket.broadcast.emit('newdelQueue');
   });
 
-  socket.on('enlistQueueDC',function(subjects){
-    delete queues.enlisters[subjects];
-    socket.emit('deleteEnlistmentQueue');
+  socket.on('enlistQueueDC',function(prof){
+    for(var i = 0; i < queues.enlisters.length; i++){
+      if(queues.enlisters[i][0] == prof){
+        queues.enlisters.splice(i,1);
+        socket.broadcast.emit('newdelQueue');
+      }
+    }
+
   });
 
 };

@@ -103,12 +103,13 @@ html
                     strong
                       h5 #{key}
                   .card-panel.collection
-                    ul.collection(id='#{key}')
-                      -var i = 1;
-                      each item in queuesAdvise[key]
-                        li.collection-item.batch1 <b class="left">#{item.substring(0,2)}</b> #{item.substring(3)}
-                        -i++;
-                        -if(i > 15) break;
+                    if Object.keys(queuesAdvise[key]).length > 0
+                      ul.collection(id='#{key}')
+                        -var i = 1;
+                        each item in queuesAdvise[key]
+                          li.collection-item.batch1 <b class="left">#{item.substring(0,2)}</b> #{item.substring(3)}
+                          -i++;
+                          -if(i > 15) break;
 
             if Object.keys(queuesEnlist).length > 0
               each val,key in queuesEnlist
@@ -116,10 +117,11 @@ html
                   .card-panel.headPadding2
                     strong
                       h5 #{key}
-                  .card-panel.collection(id='#{key}')
-                    ul.collection
+                  .card-panel.collection
+                    ul.collection(id='#{key}')
                       -var i = 1;
-                      each item in queuesEnlist[key]
-                        li.collection-item.batch2 #{item}
-                        -i++;
-                        -if(i > 15) break;
+                      if locals.queuesEnlist[key]
+                        each item in queuesEnlist[key]
+                          li.collection-item.batch2 #{item}
+                          -i++;
+                          -if(i > 15) break;

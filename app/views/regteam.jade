@@ -4,46 +4,10 @@ html
     link(rel='stylesheet', type='text/css', href='/css/regteam-style.css')
     link(rel='stylesheet', type='text/css', href='/css/materialize.css')
 
-<<<<<<< HEAD
-  form(action='/regteamadmin/createqueue',method='POST')
-    .row
-        .col.s4.offset-s1.hoverable.z-depth-1.blue.lighten-5
-          h3.center-align Advising Enqueue Station
-          .row
-            .input-field.col.s12
-              input#batchName.validate(type='text',name='queueName')
-              label(for='batchName') Enter Batch(eg. '20XX')
-            .input-field.col.s12
-              input#adviseName.validate(type='text',name='name')
-              label(for='adviseName') Enter Complete Name
-          .row
-            .col.s4.offset-s4
-              button#advise.waves-effect.waves-light.btn(type='button') Enqueue!
-          if locals.message
-            p #{message}
-          else
-        .col.s4.offset-s2.hoverable.z-depth-1.blue.lighten-5
-          h3.center-align Enlisting Enqueue Station
-          .row
-            .input-field.col.s12
-              input#subjects.validate(type='text',name='subjects')
-              label(for='subjects') Enter Subjects To Enlist In(eg. '11,12,21')
-            .input-field.col.s12
-              input#enlistName.validate(type='text',name='name')
-              label(for='enlistName') Enter Complete Name
-          .row
-            .col.s4.offset-s4
-              button#enlist.waves-effect.waves-light.btn(type='button') Enqueue!
-          
-          if locals.message
-            p #{message}
-          else
-            p
-=======
-    script(src="js/jquery.js")
-    script(type='text/javascript', src='/js/materialize.js')
-    script(src='/socket.io/socket.io.js')
-    script(src="js/regteam-app.js")
+  script(src="js/jquery.js")
+  script(type='text/javascript', src='/js/materialize.js')
+  script(src='/socket.io/socket.io.js')
+  script(src="js/regteam-app.js")
   
   body
       header
@@ -100,14 +64,9 @@ html
                         option(value="#{item}") #{item} 
                     label(for='sections') Choose subjects
                   .input-field.col.s12
-                    input#adviseName.validate(type='text',name='name')
+                    input#enlistName.validate(type='text',name='name')
                     label(for='enlistName') Enter Complete Name
                 .row
                   .col.s4.offset-s4
                     button#enlist.waves-effect.waves-light.btn(type='button') Enqueue!
                 
-                //-if locals.message
-                  p #{message}
-                //-else
-                  p
->>>>>>> 8144a275b4bff34fcfe63c18715fab0490587f62

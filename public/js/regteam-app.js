@@ -12,6 +12,7 @@ $(document).ready(function(){
 
   var enlistSubjects = $('#subjects');
   var enlistName = $('#enlistName');
+  var enlistSections = $('#sections');
   var cn = $('#CN');
 
   var modal = $('#modal1');
@@ -32,16 +33,10 @@ $(document).ready(function(){
   });
 
   $('button#enlist').click(function(){
-<<<<<<< HEAD
-      socket.emit('enqueueEnlister', enlistName.val(), enlistSubjects.val());
-      enlistName.val('');
-      enlistSubjects.val(''); 
-      alert('enlisted!');
-=======
-      socket.emit('enqueueEnlister', enlistName.val(), enlistSections.val());
+    console.log(enlistSections.val())
+      socket.emit('enqueueEnlistee', enlistName.val(), enlistSections.val());
       document.getElementById("formStation").reset(); 
       //modal.fadeIn(500);
       modalTrigger.click();
->>>>>>> 8144a275b4bff34fcfe63c18715fab0490587f62
   });
 });

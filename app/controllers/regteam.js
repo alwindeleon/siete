@@ -10,7 +10,14 @@ module.exports = function (app) {
 
 router.get('/', function (req, res, next) {
   //show regteam page
-  res.render('regteam', {adviseList: Object.keys(queues.advise), enlistList: Object.keys(queues.enlist)});
+  if(queues.advise != null){
+    var  adviseQs = Object.keys(queues.advise);
+  }
+  else {
+     var  adviseQs = [];
+  }
+  
+  res.render('regteam', {adviseList:adviseQs , enlistList:queues.CS_subjects });
 });
 
 

@@ -8,16 +8,28 @@ module.exports = function (app) {
 };
 
 router.get('/', function (req, res, next) {
+  //declare a funtion
+  function isEmptyObject( obj ) {
+      for ( var name in obj ) {
+          return false;
+      }
+      return true;
+  }
   //show homepage
   var qAdvise = queues.advise;
   //console.log("log:  " + qAdvise);
-<<<<<<< HEAD
-  res.render('index', {queuesAdvise: qAdvise, queuesEnlist: queues.enlisters});
-=======
-  qEnlist = {"CS": "blue"};
+// <<<<<<< HEAD
+//   res.render('index', {queuesAdvise: qAdvise, queuesEnlist: queues.enlisters});
+// =======
+  qEnlist = {};
+  if(!isEmptyObject(queues.enlisters)){
+    for(var i = 0; i < queues.enlisters.length; i++){
+      qEnlist[queues.enlisters[i][0]] = queues.enlisters[i][2];
+    }
+  }
+  
 
   res.render('index', {queuesAdvise: qAdvise, queuesEnlist: qEnlist});
->>>>>>> 8144a275b4bff34fcfe63c18715fab0490587f62
 });
 
 router.get('/login', function (req, res, next) {
@@ -43,7 +55,7 @@ router.post('/login', function (req, res, next) {
 
 });
 
-router.post('/logout', function (req, res, next) {
-  req.session.destroy();
+router.get('/logout', function (req, res, next) {
+  if(req.session) req.session.destroy();
   res.redirect('/');
 });

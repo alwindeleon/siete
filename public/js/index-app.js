@@ -27,14 +27,10 @@ $(document).ready(function(){
         }).appendTo('#'+queueName);
       }
     }
-<<<<<<< HEAD
-  })
-
-  socket.on('deleteEnlistmentQueue',function(){
-    location.reload();
-  })
-=======
-      
   });
->>>>>>> 8144a275b4bff34fcfe63c18715fab0490587f62
+
+  socket.on('newdelQueue',function(){
+    location.reload();
+  });
+  
 });

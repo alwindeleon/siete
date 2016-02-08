@@ -18,11 +18,9 @@ Class('MainQueues', {
       // advise control number
         this.adviseControlNumber ={};
 
-      // dictionary of queues for enlistment
         this.enlistees = [];
         
-      //availability of classes
-        this.enlisters = {};
+        this.enlisters = [];
 
       //cs subjects
       this.CS_subjects = [ 11, 12, 21, 30, 32, 130, 131, 133, 135, 140, 145, 150, 153, 180, 192, 194, 196, 197, 199, 210, 220, 231, 250, 253, 282, 290, 294, 295, 296, 297, 298, 300, 400];
@@ -39,13 +37,10 @@ Class('MainQueues', {
     },
     adviseDequeue: function(queueName, numOfRequest) {
       if(!numOfRequest) numOfRequest = 5;
-<<<<<<< HEAD
+
       if(this.advise[queueName].length <= 5){
         this.advise[queueName] = [];
-=======
-      if(this.advise[queueName].length <= 5) {
-        this.advise[queueName] = {};
->>>>>>> 8144a275b4bff34fcfe63c18715fab0490587f62
+
         return 0;
       }
       var advisees = new Array();
@@ -55,55 +50,49 @@ Class('MainQueues', {
       return this.advise[queueName];
     },
 
-    enlisteeEnqueue: function(info, subjects) {
-     var element = [info,subjects.split(',')];
-     this.enlistees.push(element);
-
+     enlisteeEnqueue: function(name, subjects) {
+       console.log("inside  enqueueEnlistee")
+       var element = [name,subjects];
+       this.enlistees.push(element);
     },
-    enlisteeDequeue: function(name, subject) {
-        for( var i = 0; i < this.enlistees.length; i++){
-          if(name == this.enlistees[i][0]){
-            var ind = this.enlistees[i][1].indexOf(subject);
-            if(ind > -1){
-              this.enlistees[i][1].splice(ind,1);
-            }
+    enlisteeDequeue: function(name,subjectsOfProf) {
+      console.log("inside   dequeueEnlistee")
+      console.log(subjectsOfProf)
+      var curStudentsToGoUp = [];
+      // get index of prof
+      var indexOfProf;
+      for( var i = 0; i < this.enlisters.length; i++){
+        if(this.enlisters[i][0] == name){
+          indexOfProf = i;
+          break;
+        }
+      }
+      for(var i = 0; i < this.enlistees.length; i++){
+        if(curStudentsToGoUp.length == 5) {
+          this.enlisters[indexOfProf][2] = curStudentsToGoUp;
+          return curStudentsToGoUp;
+        }
+        for(var j = 0; j < subjectsOfProf.length; j++ ){
+          console.log(this.enlistees[i][1] +  " vs " +subjectsOfProf[j])
+          if(this.enlistees[i][1].indexOf(subjectsOfProf[j]) > -1){
+            // remove subject tagged in student
+            this.enlistees[i][1].splice(j,1);
+            //push to current students that should be in the room upstairs 
+            console.log("enlisteeDequeue err1")
+            if(curStudentsToGoUp.indexOf(this.enlistees[i][0]) <= -1) curStudentsToGoUp.push(this.enlistees[i][0]);
+            console.log("enlisteeDequeue err2")
+            //check if tagged subjects length is equal to zero
             if(this.enlistees[i][1].length == 0){
-              this.enlistees.splice(i,1);
+              this.enlistees.splice([i],1);
             }
-            break;
           }
         }
-    },
-    enlisterEnqueue: function(name, subject) {
-     for(var key in this.enlisters){
-      var enlistersSubjs = Object.keys(this.enlisters[key])[0].split(',');
-      if( enlistersSubjs.indexOf(subject) > 0 && this.enlisters[key].indexOf(name) < 0){
-        this.enlisters[key].push(name);
       }
-     }
 
-    },
-    enlisterDequeue: function(name){
-      if(this.enlisters[name].length <=5){
-        var count = this.enlisters[name].length;
-        for(var i = 0; i < count; i++){
-          var subjects = name.split(',');
-          var curEnlistee = this.enlisters[name].shift();
-          for(var j = 0; j < subjects.length; j++){
-            this.enlisteeDequeue(curEnlistee,subjects[j] );
-          }
-        }
-      }
-      else{
-        for(var i = 0; i < 5; i++){
-          var subjects = name.split(',');
-          var curEnlistee = this.enlisters[name].shift();
-          for(var j = 0; j < subjects.length; j++){
-            this.enlisteeDequeue(curEnlistee,subjects[j] );
-          }
-        }
-      }
-      
+      console.log("enlisteeDequeue DONE!")
+      console.log("returning " + curStudentsToGoUp)
+      this.enlisters[indexOfProf][2] = curStudentsToGoUp;
+      return curStudentsToGoUp;
     },
 
     adviseCreateQ: function(queueName) {
@@ -111,21 +100,12 @@ Class('MainQueues', {
       this.adviseControlNumber[queueName] = 1;
     },
 
-    createEnlister: function(subjects) {
-      console.log('INNNNNNNNNNNNNNN');
-      this.enlisters[subjects] = [];
-      console.log(subjects);
-      subjectsArr = subjects.split(',');
-      for(var i = 0 ; i < subjectsArr.length; i++){
-        for( var j = 0; j < this.enlistees.length; j++){
-          if(this.enlistees[j][1].indexOf(subjectsArr[i]) > -1 && this.enlisters[subjects].indexOf(this.enlistees[j][0]) < 0){
-            this.enlisters[subjects].push(this.enlistees[j][0]);
-          }
-        }
-      }
-      console.log(this.enlisters[subjects]);
-      return this.enlisters[subjects];
+    createEnlister: function(name,subjects) {
+      var element = [name,subjects,[]];
+      console.log("CREATED ENLISTER " + name+" in these subjects" + subjects);
+      this.enlisters.push(element);
     },
+
 
     updateEnlistAvailable: function(){
       
