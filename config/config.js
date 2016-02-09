@@ -26,7 +26,7 @@ var config = {
     app: {
       name: 'siete'
     },
-    port: 3000,
+    port: process.env.PORT || 3000,
     db: process.env.MONGOLAB_URI || 'mongodb://localhost/siete-production'
   }
 };
