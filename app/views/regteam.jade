@@ -35,38 +35,24 @@ html
         form#formStation(action='/regteamadmin/createqueue',method='POST')
           .section
             .row
-              .col.s4.offset-s1.hoverable.z-depth-1.blue.lighten-5
-                h3.center-align Advising Enqueue Station
+              .col.s6.offset-s1.hoverable.z-depth-1.blue.lighten-5
+                h3.center-align Sign up for a Queue
                 .row
                   .input-field.col.s12
-                    select(id="batchName")
-                      option#defaultOptionAdv(value="default" selected disabled) Choose your batch
-                      each item in adviseList
-                        option(value="#{item}") #{item} 
-                    label(for='batchName') Choose batch/year
+                    select(id="queueName")
+                      option#defaultOptionAdv(value="default" selected disabled) Choose your queue
+                      each key in queueList
+                        option(value="#{key}") #{key} 
+                    label(for='queueName') Which queue?
                   .input-field.col.s12
-                    input#adviseName.validate(type='text',name='name')
-                    label(for='adviseName') Enter Complete Name
+                    input#personName.validate(type='text',name='name')
+                    label(for='personName') Enter Complete Name
 
                 .row
                   .col.s4.offset-s4
-                    button#advise.waves-effect.waves-light.btn(type='button') Enqueue!
+                    button#enqueue.waves-effect.waves-light.btn(type='button') Submit
                 if locals.message
                   p #{message}
                 else
-              .col.s4.offset-s2.hoverable.z-depth-1.blue.lighten-5
-                h3.center-align Enlisting Enqueue Station
-                .row
-                  .input-field.col.s12
-                    select(id="sections" multiple)
-                      option#defaultOptionEn(value="default" selected disabled) Choose your subjects
-                      each item in enlistList
-                        option(value="#{item}") #{item} 
-                    label(for='sections') Choose subjects
-                  .input-field.col.s12
-                    input#enlistName.validate(type='text',name='name')
-                    label(for='enlistName') Enter Complete Name
-                .row
-                  .col.s4.offset-s4
-                    button#enlist.waves-effect.waves-light.btn(type='button') Enqueue!
+              
                 

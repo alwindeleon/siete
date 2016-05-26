@@ -7,8 +7,8 @@ $(document).ready(function(){
 
   $('select').material_select();
 
-  var adviseBatch = $('#batchName');
-  var adviseName = $('#adviseName');
+  var queueName = $('#queueName');
+  var personName = $('#personName');
 
   var enlistSubjects = $('#subjects');
   var enlistName = $('#enlistName');
@@ -24,14 +24,15 @@ $(document).ready(function(){
     modal.hide();
     cn.text('loading. . .');
   });
-  $('button#advise').click(function(){
-      socket.emit('enqueueAdviser', adviseName.val(), adviseBatch.val());
+  $('button#enqueue').click(function(){
+      socket.emit('enqueue', personName.val(), queueName.val());
       document.getElementById("formStation").reset();
 
       //modal.fadeIn(500);
       modalTrigger.click();
   });
 
+  /**
   $('button#enlist').click(function(){
     console.log(enlistSections.val())
       socket.emit('enqueueEnlistee', enlistName.val(), enlistSections.val());
@@ -39,4 +40,5 @@ $(document).ready(function(){
       //modal.fadeIn(500);
       modalTrigger.click();
   });
+  **/
 });

@@ -80,48 +80,61 @@ html
       nav.z-depth-1
         .nav-wrapper.white
           a.brand-logo.center.black-text(href='/') DCSReGQ
-          | 
-          | 
           ul#nav-mobile.left.hide-on-med-and-down
             li
               a.black-text(href='/login') login
-            | 
             li
-              a.black-text(href='#') classes
-            | 
+              a.black-text(href='/classes') classes
             li
               a.black-text(href='#') about
-    | 
+
     main
       .row
         .col.s12.l12
           #queue-carousel.slk
-            if Object.keys(queuesAdvise).length > 0
-              each val,key in queuesAdvise
+            if queues && queues.length > 0
+              each q in queues 
                 .col.l2.s12.center-align
                   .card-panel.headPadding1
                     strong
-                      h5 #{key}
+                      - var title = Object.keys(q)[0]
+                      h5 #{title}
                   .card-panel.collection
-                    if Object.keys(queuesAdvise[key]).length > 0
-                      ul.collection(id='#{key}')
+                    if Object.keys(q).length > 0
+                      ul.collection(id='#{title}')
                         -var i = 1;
-                        each item in queuesAdvise[key]
-                          li.collection-item.batch1 <b class="left">#{item.substring(0,2)}</b> #{item.substring(3)}
+                        each person in q[title]['Content']
+                          //li.collection-item.batch1 <b class='left' id='personNum'>#{person['Number']}</b> </span id='personName'>#{person['Name']}</span>
+                          li.collection-item.batch1 #{person['Number']} - #{person['Name']}
                           -i++;
                           -if(i > 15) break;
 
-            if Object.keys(queuesEnlist).length > 0
-              each val,key in queuesEnlist
-                .col.l2.s12.center-align
-                  .card-panel.headPadding2
-                    strong
-                      h5 #{key}
-                  .card-panel.collection
-                    ul.collection(id='#{key}')
-                      -var i = 1;
-                      if locals.queuesEnlist[key]
-                        each item in queuesEnlist[key]
-                          li.collection-item.batch2 #{item}
-                          -i++;
-                          -if(i > 15) break;
+            ////if Object.keys(queues).length > 0
+//              each val,key in queuesAdvise
+//                .col.l2.s12.center-align
+//                  .card-panel.headPadding1
+//                    strong
+//                      h5 #{key}
+//                  .card-panel.collection
+//                    if Object.keys(queuesAdvise[key]).length > 0
+//                      ul.collection(id='#{key}')
+//                        -var i = 1;
+//                        each item in queuesAdvise[key]
+//                          li.collection-item.batch1 <b class="left">#{item.substring(0,2)}</b> #{item.substring(3)}
+//                          -i++;
+//                          -if(i > 15) break;//
+
+//            //if Object.keys(queuesEnlist).length > 0
+//              each val,key in queuesEnlist
+//                .col.l2.s12.center-align
+//                  .card-panel.headPadding2
+//                    strong
+//                      h5 #{key}
+//                  .card-panel.collection
+//                    ul.collection(id='#{key}')
+//                      -var i = 1;
+//                      if locals.queuesEnlist[key]
+//                        each item in queuesEnlist[key]
+//                          li.collection-item.batch2 #{item}
+//                          -i++;
+//                          -if(i > 15) break;'''

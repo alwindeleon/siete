@@ -24,34 +24,38 @@ body
     nav
       .nav-wrapper.white
         a.tooltipped.brand-logo.center.black-text(href='/adviser' data-position='right' data-tooltip='Click to change queue to advise') Adviser Dashboard
+        ul#nav-mobile.right
+            li
+              a.black-text(href='/logout') logout
+            | 
+            li
+              a.black-text(href='/classes') classes
+            | 
+            li
+              a.black-text(href='/') public
                     
-        ul.right.hide-on-med-and-down
-          li
-            a.white-text(href='/') Home
-          |             
-          li
-            a.white-text(href='#!') Switch to Enlister
-          |             
-          li
-            a.white-text(href='/logout') Logout
-        |           
-        ul#slide-out.side-nav.fixed.cyan
-          li
-            a.white-text(href='/') Home
-          |             
-          li
+       
+        ul#slide-out.side-nav.fixed.cyan.center Choose a queue
+          //li
+            a.white-text(href='/') Home      
+          //li
             a.white-text(href='#') Switch to Enlister
-          |             
-          li
+          //li
             a.white-text(href='/logout') Logout
-        |           
+          each q in queueList
+            li
+              a.white-text(class='q-side-btn')
+                span #{q}
+
+
+        
         a.button-collapse(href='#', data-activates='slide-out')
           i.mdi-navigation-menu.cyan
        
   main
-    a.waves-effect.waves-light.btn.modal-trigger(href="#modal1") Modal
+    //a.waves-effect.waves-light.btn.modal-trigger(href="#modal1") Modal
 
-    #modal1.modal
+    //#modal1.modal
       .modal-content
         p Which batch are you handling?
         select(id="batchSelect")
@@ -66,16 +70,17 @@ body
       .col.l6.s12.center-align
         .card-panel
           strong
-            h5#batch batch
+            h5#queue-title Select a queue to display
                           
         ul#queue.card-panel.collection
           li.collection-item.batch1 Queue is empty                   
           
-      .col.l6.s12.center-align.fixed
+      .col.l6.s12.center-align
         .card-panel.white
           p Queue length: 
           p#numAdvisees
-          a#next.waves-effect.waves-light.btn-large Call next 5
+          a#next.waves-effect.waves-light.btn-large Call next (5)
+
   // Scripts
   script.
     $('.button-collapse').sideNav({

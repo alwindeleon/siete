@@ -7,7 +7,18 @@ module.exports = function (app) {
   app.use('/', router);
 };
 
-router.get('/', function (req, res, next) {
+router.get('/', function(req,res,next){
+  //res.send(queues.queues);
+  res.render('index',{queues:queues.queues});
+});
+
+router.get('/classes', function(req,res,next){
+  var classList = {"CS 11 THU": 5,"CS 12 WFX":4, "CS 153 THX":4, "CS 32 THR":10}; //key-value pair of class section and available slots
+  var updateTime = new Date();
+  res.render('classes',{classList: classList, updateTime: updateTime});
+});
+
+/*router.get('/', function (req, res, next) {
   //declare a funtion
   function isEmptyObject( obj ) {
       for ( var name in obj ) {
@@ -58,4 +69,4 @@ router.post('/login', function (req, res, next) {
 router.get('/logout', function (req, res, next) {
   if(req.session) req.session.destroy();
   res.redirect('/');
-});
+});*/

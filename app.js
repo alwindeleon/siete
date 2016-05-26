@@ -3,7 +3,7 @@ var express = require('express'),
   glob = require('glob'),
   mongoose = require('mongoose'),
   http = require('http'),
-  scraperjs = require('scraperjs'),
+  //scraperjs = require('scraperjs'),
   socketIo = require('socket.io'),
   socketMVC = require('socket.mvc'),
   Class = require('classes').Class;
@@ -13,133 +13,138 @@ var express = require('express'),
 Class('MainQueues', {
     
     construct: function() {
-      //dictionary of queues for advising
-        this.advise = {};
-      // advise control number
-        this.adviseControlNumber ={};
+      this.queues = [];
+      this.classList = [];
+      this.classAvailablity = [];
+    },
 
-        this.enlistees = [];
-        
-        this.enlisters = [];
+    add: function(newQ){
+      this.queues.push(newQ);
+    },
 
-      //cs subjects
-      this.CS_subjects = [ 11, 12, 21, 30, 32, 130, 131, 133, 135, 140, 145, 150, 153, 180, 192, 194, 196, 197, 199, 210, 220, 231, 250, 253, 282, 290, 294, 295, 296, 297, 298, 300, 400];
+    add_to_queue: function(qname, name) {
+      var q = this.get_queue(qname);
 
+      q['Queue Number'] += 1;
+      var last_num = q['Queue Number'];
+      q['Content'].push({'Name': name, 'Number': last_num});
+
+      console.log("add\n");
+
+      return last_num;
 
     },
+
+    get_queue: function(qname){
+      var q = null; //get queue
+      for(var i=0; i < this.queues.length; i++){
+        if(Object.keys(this.queues[i])[0] == qname)
+          q = this.queues[i][qname]
+      }
+
+      return q;      
+    },
+
+    get_all_queues: function(){
+      return this.queues;      
+    },
+
+    get_all_queue_names: function(){
+      var qnames = []
+      for(var i of this.queues){
+        qnames.push(Object.keys(i)[0])
+      }
+      return qnames;      
+    },
+
     
-    adviseEnqueue: function(info, queueName) {
-        var curCN = this.adviseControlNumber[queueName];
-        info = String(curCN) + '. ' + info;
-        this.advise[queueName].push(info);
-        this.adviseControlNumber[queueName]++;
-        return curCN;
-    },
-    adviseDequeue: function(queueName, numOfRequest) {
-      if(!numOfRequest) numOfRequest = 5;
+    dequeue: function(qname, number){
+      if(!number) number = 5;
 
-      if(this.advise[queueName].length <= 5){
-        this.advise[queueName] = [];
+      var q = this.get_queue(qname);
+      var callNext = [];
+      var qContents = q['Content'];
 
-        return 0;
-      }
-      var advisees = new Array();
-      for(var i = 0; i < numOfRequest; i++){
-        advisees.push(this.advise[queueName].shift());
-      }
-      return this.advise[queueName];
-    },
-
-     enlisteeEnqueue: function(name, subjects) {
-       console.log("inside  enqueueEnlistee")
-       var element = [name,subjects];
-       this.enlistees.push(element);
-    },
-    enlisteeDequeue: function(name,subjectsOfProf) {
-      console.log("inside   dequeueEnlistee")
-      console.log(subjectsOfProf)
-      var curStudentsToGoUp = [];
-      // get index of prof
-      var indexOfProf;
-      for( var i = 0; i < this.enlisters.length; i++){
-        if(this.enlisters[i][0] == name){
-          indexOfProf = i;
+      for(var i=0; i < number; i++){
+        if(qContents.length > 0)
+          callNext.push(qContents.shift());
+        else
           break;
-        }
       }
-      for(var i = 0; i < this.enlistees.length; i++){
-        if(curStudentsToGoUp.length == 5) {
-          this.enlisters[indexOfProf][2] = curStudentsToGoUp;
-          return curStudentsToGoUp;
-        }
-        for(var j = 0; j < subjectsOfProf.length; j++ ){
-          console.log(this.enlistees[i][1] +  " vs " +subjectsOfProf[j])
-          if(this.enlistees[i][1].indexOf(subjectsOfProf[j]) > -1){
-            // remove subject tagged in student
-            this.enlistees[i][1].splice(j,1);
-            //push to current students that should be in the room upstairs 
-            console.log("enlisteeDequeue err1")
-            if(curStudentsToGoUp.indexOf(this.enlistees[i][0]) <= -1) curStudentsToGoUp.push(this.enlistees[i][0]);
-            console.log("enlisteeDequeue err2")
-            //check if tagged subjects length is equal to zero
-            if(this.enlistees[i][1].length == 0){
-              this.enlistees.splice([i],1);
+      return callNext;//array of next people to call in line
+    },
+
+    enlistInitQ: function() {
+      var self = this;
+      var CS_CLASSES=[];
+      var AVAILABILTY=[];
+      //scraperjs.StaticScraper.create('https://google.com')
+      scraperjs.StaticScraper.create('https://crs.upd.edu.ph/schedule/120152/cs')
+        .scrape(function($) {
+            
+            $('#tbl_schedule tbody tr td:nth-child(2)').each( function(){
+               CS_CLASSES.push( $(this).text() );       
+            }).get();
+
+            $('#tbl_schedule tbody tr td:nth-child(2)').each( function(){
+               AVAILABILTY.push( $(this).text() );       
+            }).get();
+
+            return {
+              CS_CLASSES: CS_CLASSES,
+              AVAILABILTY: AVAILABILTY
             }
-          }
-        }
-      }
-
-      console.log("enlisteeDequeue DONE!")
-      console.log("returning " + curStudentsToGoUp)
-      this.enlisters[indexOfProf][2] = curStudentsToGoUp;
-      return curStudentsToGoUp;
-    },
-
-    adviseCreateQ: function(queueName) {
-      this.advise[queueName] = [];
-      this.adviseControlNumber[queueName] = 1;
-    },
-
-    createEnlister: function(name,subjects) {
-      var element = [name,subjects,[]];
-      console.log("CREATED ENLISTER " + name+" in these subjects" + subjects);
-      this.enlisters.push(element);
-    },
-
-
-    updateEnlistAvailable: function(){
-      
-        
-    },
-    adviseGetQueue: function(queueName){
-      return this.advise[queueName];
-    },
-    resetQueues: function(){
-      this.advise = {};
-      this.adviseControlNumber = {};
-      this.enlistees = {};
-      this.enlisters = {};
-    }
-
+        })
+        .then(function(scrapedInfo) {
+          //remove whitespaces in AVAILABILTY
+          scrapedInfo.AVAILABILTY = scrapedInfo.AVAILABILTY.map(function(x){
+              return x.split('/').map(function(z){
+                console.log(z.trim());
+                return z.trim();
+              });
+            });
+            scrapedInfo.CS_CLASSES.forEach(function(csClass,index){
+              self.enlist[csClass] = [];
+              self.enlistAvailable[csClass] = scrapedInfo.AVAILABILTY[index];
+            });
+        })
+    },    
 });
 
-mongoose.connect(config.db);
-var db = mongoose.connection;
-db.on('error', function () {
-  throw new Error('unable to connect to database at ' + config.db);
-});
+//mongoose.connect(config.db);
+//var db = mongoose.connection;
+//db.on('error', function () {
+//  throw new Error('unable to connect to database at ' + config.db);
+//});//
 
-db.once('open', function() {
-  console.log("connected to " +  config.db);
-});
+//db.once('open', function() {
+//  console.log("connected to " +  config.db);
+//});//
 
 var models = glob.sync(config.root + '/app/models/*.js');
 models.forEach(function (model) {
   require(model);
 });
+
+
 var app = express();
 
 queues = new MainQueues();
+//a Queue is a {Queue name, dict}
+//a dict is {Content_list, Last Number}
+//a Content is a list of {Name, number}
+queues.add({'CS11': {'Content':[{'Number':1, 'Name': 'John'}], 'Queue Number': 1}});
+queues.add({'CS123': {'Content':[{'Number':1, 'Name': 'Jake'}], 'Queue Number': 1}});
+queues.add({'CS145': {'Content':[{'Number':1, 'Name': 'Jake'}], 'Queue Number': 1}});
+queues.add({'CS187': {'Content':[{'Number':1, 'Name': 'Jake'}], 'Queue Number': 1}});
+queues.add({'2014': {'Content':[{'Number':1, 'Name': 'Jake'}], 'Queue Number': 1}});
+queues.add({'2013': {'Content':[{'Number':1, 'Name': 'Jake'}], 'Queue Number': 1}});
+queues.add({'CS10': {'Content':[{'Number':1, 'Name': 'Jake'}], 'Queue Number': 1}});
+queues.add({'CS200': {'Content':[{'Number':1, 'Name': 'Jake'}], 'Queue Number': 1}});
+queues.add({'CS300': {'Content':[{'Number':1, 'Name': 'Jake'}], 'Queue Number': 1}});
+
+queues.add_to_queue('CS11', "Jake");
+
 
 require('./config/express')(app, config);
 
@@ -167,31 +172,3 @@ io.sockets.on('connection', function(socket){
     filePath: ['./app/controllers/index-socket.js']
   });
 });
-
-// for testing  -louvette
-queues.adviseCreateQ("2012");
-queues.adviseEnqueue("oh wonder", "2012");
-queues.adviseEnqueue("fickle friends", "2012");
-
-
-queues.adviseCreateQ("2011");
-queues.adviseEnqueue("john mayer", "2011");
-queues.adviseEnqueue("john may", "2011");
-queues.adviseEnqueue("john mayest", "2011");
-queues.adviseEnqueue("apple", "2011");
-queues.adviseEnqueue("orange", "2011");
-queues.adviseEnqueue("beef", "2011");
-queues.adviseEnqueue("apple", "2011");
-queues.adviseEnqueue("orange", "2011");
-queues.adviseEnqueue("beef", "2011");
-queues.adviseEnqueue("apple", "2011");
-queues.adviseEnqueue("orange", "2011");
-queues.adviseEnqueue("beef", "2011");
-queues.adviseEnqueue("apple", "2011");
-queues.adviseEnqueue("orange", "2011");
-queues.adviseEnqueue("beef", "2011");
-queues.adviseEnqueue("orange", "2011");
-queues.adviseEnqueue("beef", "2011");
-queues.adviseEnqueue("apple", "2011");
-queues.adviseEnqueue("orange", "2011");
-queues.adviseEnqueue("beef", "2011");
