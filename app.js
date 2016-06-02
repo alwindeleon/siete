@@ -80,44 +80,8 @@ Class('MainQueues', {
     },    
 });
 
-var CS_CLASSES=[];
-var AVAILABILTY=[];
 
-//  returns a promise. usage  -> getCSCLASSES().then(fn(data))
-// eg. getCSCLASSES().then(function(info){
-//      console.log(info)
-//     });
-// data -> {CS_CLASESS: [name1,name2...], AVAILABILITY: [[availableslots1, totalslots1]...[]]
-function getCSCLASSES(){
-  var self = this;
-  return scraperjs.StaticScraper.create('https://crs.upd.edu.ph/schedule/120154/cs')
-    .scrape(function($) {
-        
-        $('#tbl_schedule tbody tr td:nth-child(2)').each( function(){
-           CS_CLASSES.push( $(this).text() );       
-        }).get();
 
-        $('#tbl_schedule tbody tr td:nth-child(6)').each( function(){
-           AVAILABILTY.push( $(this).text() );       
-        }).get();
-
-        return {
-          CS_CLASSES: CS_CLASSES,
-          AVAILABILTY: AVAILABILTY
-        }
-    })
-    .then(function(scrapedInfo) {
-      //remove whitespaces in AVAILABILTY
-      scrapedInfo.AVAILABILTY = scrapedInfo.AVAILABILTY.map(function(x){
-          return x.split('/').map(function(z){
-            return z.trim();
-          });
-        });
-        CS_CLASSES = scrapedInfo.CS_CLASSES
-        AVAILABILTY = scrapedInfo.AV
-         return scrapedInfo
-    })
-};
 //mongoose.connect(config.db);
 //var db = mongoose.connection;
 //db.on('error', function () {
