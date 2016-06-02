@@ -3,8 +3,6 @@ extends layout
 block content
   if locals.error
     p #{error}
-  else
-    p no error
 
   form(action='/login',method='POST')
     .row.valign-wrapper

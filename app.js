@@ -19,7 +19,7 @@ Class('MainQueues', {
     },
 
     // newQ input structure: {'CS11': {'Content':[{'Number':1, 'Name': 'John'}], 'Queue Number': 1}}
-    add: function(newQ){
+    createQueue: function(newQ){
       this.queues.push(newQ);
     },
 
@@ -75,22 +75,27 @@ Class('MainQueues', {
       return callNext;//array of next people to call in line
     },
 
-    enlistInitQ: function() {
-      
-    },    
+    deleteQueue: function(name) {
+      var q = null; //get queue
+      for(var i=0; i < this.queues.length; i++){
+        if(Object.keys(this.queues[i])[0] == qname)
+          this.queues.splice (1, i)
+      }
+
+    },
 });
 
 
 
-//mongoose.connect(config.db);
-//var db = mongoose.connection;
-//db.on('error', function () {
-//  throw new Error('unable to connect to database at ' + config.db);
-//});//
+mongoose.connect(config.db);
+var db = mongoose.connection;
+db.on('error', function () {
+ throw new Error('unable to connect to database at ' + config.db);
+});//
 
-//db.once('open', function() {
-//  console.log("connected to " +  config.db);
-//});//
+db.once('open', function() {
+ console.log("connected to " +  config.db);
+});
 
 var models = glob.sync(config.root + '/app/models/*.js');
 models.forEach(function (model) {
@@ -104,15 +109,15 @@ queues = new MainQueues();
 //a Queue is a {Queue name, dict}
 //a dict is {Content_list, Last Number}
 //a Content is a list of {Name, number}
-queues.add({'CS11': {'Content':[{'Number':1, 'Name': 'John'}], 'Queue Number': 1}});
-queues.add({'CS123': {'Content':[{'Number':1, 'Name': 'Jake'}], 'Queue Number': 1}});
-queues.add({'CS145': {'Content':[{'Number':1, 'Name': 'Jake'}], 'Queue Number': 1}});
-queues.add({'CS187': {'Content':[{'Number':1, 'Name': 'Jake'}], 'Queue Number': 1}});
-queues.add({'2014': {'Content':[{'Number':1, 'Name': 'Jake'}], 'Queue Number': 1}});
-queues.add({'2013': {'Content':[{'Number':1, 'Name': 'Jake'}], 'Queue Number': 1}});
-queues.add({'CS10': {'Content':[{'Number':1, 'Name': 'Jake'}], 'Queue Number': 1}});
-queues.add({'CS200': {'Content':[{'Number':1, 'Name': 'Jake'}], 'Queue Number': 1}});
-queues.add({'CS300': {'Content':[{'Number':1, 'Name': 'Jake'}], 'Queue Number': 1}});
+queues.createQueue({'CS11': {'Content':[{'Number':1, 'Name': 'John'}], 'Queue Number': 1}});
+queues.createQueue({'CS123': {'Content':[{'Number':1, 'Name': 'Jake'}], 'Queue Number': 1}});
+queues.createQueue({'CS145': {'Content':[{'Number':1, 'Name': 'Jake'}], 'Queue Number': 1}});
+queues.createQueue({'CS187': {'Content':[{'Number':1, 'Name': 'Jake'}], 'Queue Number': 1}});
+queues.createQueue({'2014': {'Content':[{'Number':1, 'Name': 'Jake'}], 'Queue Number': 1}});
+queues.createQueue({'2013': {'Content':[{'Number':1, 'Name': 'Jake'}], 'Queue Number': 1}});
+queues.createQueue({'CS10': {'Content':[{'Number':1, 'Name': 'Jake'}], 'Queue Number': 1}});
+queues.createQueue({'CS200': {'Content':[{'Number':1, 'Name': 'Jake'}], 'Queue Number': 1}});
+queues.createQueue({'CS300': {'Content':[{'Number':1, 'Name': 'Jake'}], 'Queue Number': 1}});
 
 queues.add_to_queue('CS11', "Jake");
 
