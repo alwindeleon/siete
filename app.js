@@ -3,7 +3,7 @@ var express = require('express'),
   glob = require('glob'),
   mongoose = require('mongoose'),
   http = require('http'),
-  //scraperjs = require('scraperjs'),
+  scraperjs = require('scraperjs'),
   socketIo = require('socket.io'),
   socketMVC = require('socket.mvc'),
   Class = require('classes').Class;
@@ -18,6 +18,7 @@ Class('MainQueues', {
       this.classAvailablity = [];
     },
 
+    // newQ input structure: {'CS11': {'Content':[{'Number':1, 'Name': 'John'}], 'Queue Number': 1}}
     add: function(newQ){
       this.queues.push(newQ);
     },
@@ -75,42 +76,48 @@ Class('MainQueues', {
     },
 
     enlistInitQ: function() {
-      var self = this;
-      var CS_CLASSES=[];
-      var AVAILABILTY=[];
-      //scraperjs.StaticScraper.create('https://google.com')
-      scraperjs.StaticScraper.create('https://crs.upd.edu.ph/schedule/120152/cs')
-        .scrape(function($) {
-            
-            $('#tbl_schedule tbody tr td:nth-child(2)').each( function(){
-               CS_CLASSES.push( $(this).text() );       
-            }).get();
-
-            $('#tbl_schedule tbody tr td:nth-child(2)').each( function(){
-               AVAILABILTY.push( $(this).text() );       
-            }).get();
-
-            return {
-              CS_CLASSES: CS_CLASSES,
-              AVAILABILTY: AVAILABILTY
-            }
-        })
-        .then(function(scrapedInfo) {
-          //remove whitespaces in AVAILABILTY
-          scrapedInfo.AVAILABILTY = scrapedInfo.AVAILABILTY.map(function(x){
-              return x.split('/').map(function(z){
-                console.log(z.trim());
-                return z.trim();
-              });
-            });
-            scrapedInfo.CS_CLASSES.forEach(function(csClass,index){
-              self.enlist[csClass] = [];
-              self.enlistAvailable[csClass] = scrapedInfo.AVAILABILTY[index];
-            });
-        })
+      
     },    
 });
 
+var CS_CLASSES=[];
+var AVAILABILTY=[];
+
+//  returns a promise. usage  -> getCSCLASSES().then(fn(data))
+// eg. getCSCLASSES().then(function(info){
+//      console.log(info)
+//     });
+// data -> {CS_CLASESS: [name1,name2...], AVAILABILITY: [[availableslots1, totalslots1]...[]]
+function getCSCLASSES(){
+  var self = this;
+  return scraperjs.StaticScraper.create('https://crs.upd.edu.ph/schedule/120154/cs')
+    .scrape(function($) {
+        
+        $('#tbl_schedule tbody tr td:nth-child(2)').each( function(){
+           CS_CLASSES.push( $(this).text() );       
+        }).get();
+
+        $('#tbl_schedule tbody tr td:nth-child(6)').each( function(){
+           AVAILABILTY.push( $(this).text() );       
+        }).get();
+
+        return {
+          CS_CLASSES: CS_CLASSES,
+          AVAILABILTY: AVAILABILTY
+        }
+    })
+    .then(function(scrapedInfo) {
+      //remove whitespaces in AVAILABILTY
+      scrapedInfo.AVAILABILTY = scrapedInfo.AVAILABILTY.map(function(x){
+          return x.split('/').map(function(z){
+            return z.trim();
+          });
+        });
+        CS_CLASSES = scrapedInfo.CS_CLASSES
+        AVAILABILTY = scrapedInfo.AV
+         return scrapedInfo
+    })
+};
 //mongoose.connect(config.db);
 //var db = mongoose.connection;
 //db.on('error', function () {
